@@ -1,0 +1,22 @@
+prompts:
+  - name: Create base-standards
+    description: la instrucción debe comprobar si existe ya un documento en openspec/specs/base-standard.mdc y si no, crearlo con el conjunto de estándares, lineamientos y prácticas recomendadas para el desarrollo de un proyecto en la capa de servidor. Especifica cómo estructurar el código, cómo organizar los componentes del sistema y cómo aplicar principios de diseño para lograr una base de código coherente, mantenible y escalable.
+    content_file: commands/openspec/create-base-standards.md
+  - name: Create development guide
+    description: This guide provides step-by-step instructions for setting up the development environment and running tests
+    content_file: commands/openspec/create-development-guide.md
+  - name: Update docs
+    description: Use openspec/specs/documentation-standards.mdc to update whatever documentation is needed according to the changes made
+    content_file: commands/openspec/update-docs.md
+  - name: Create backend standards
+    description: Comprobar si existe el documento openspec/specs/standards/backend.mdc y si no, crearlo con estándares, prácticas recomendadas y convenciones para el desarrollo backend del proyecto
+    content_file: commands/openspec/create-backend-standards.md
+  - name: Analyze and create standards
+    description: Analiza completamente el código base del proyecto y genera un documento estructurado de estándares, convenciones y mejores prácticas basado en el análisis real del código, incluyendo tecnologías, patrones, arquitectura, UI/UX, testing y flujo de desarrollo
+    content_file: commands/openspec/analyze-and-create-standards.md
+  - name: Complete jira ticket
+    description: Analyze and complete Jira tickets by enhancing user stories with technical details and best practices
+    content_file: commands/complete-jira-ticket.md
+  - name: Meta-prompt
+    description: Expert prompt engineering assistant that restructures and optimizes prompts using best practices for clarity, structure, and effectiveness
+    content_file: commands/meta-prompt.md
