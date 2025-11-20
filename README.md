@@ -83,12 +83,6 @@ Generate development standards in OpenSpec format for your project:
 # Generate comprehensive project standards
 rovodev run openspec/analyze-and-create-standards
 
-# Create backend-specific standards
-rovodev run openspec/create-backend-standards
-
-# Create frontend-specific standards  
-rovodev run openspec/create-frontend-standards
-
 # Create development guide
 rovodev run openspec/create-development-guide
 

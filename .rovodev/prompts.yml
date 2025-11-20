@@ -1,22 +1,194 @@
-prompts:
-  - name: Create base-standards
-    description: la instrucción debe comprobar si existe ya un documento en openspec/specs/base-standard.mdc y si no, crearlo con el conjunto de estándares, lineamientos y prácticas recomendadas para el desarrollo de un proyecto en la capa de servidor. Especifica cómo estructurar el código, cómo organizar los componentes del sistema y cómo aplicar principios de diseño para lograr una base de código coherente, mantenible y escalable.
-    content_file: commands/openspec/create-base-standards.md
-  - name: Create development guide
-    description: This guide provides step-by-step instructions for setting up the development environment and running tests
-    content_file: commands/openspec/create-development-guide.md
-  - name: Update docs
-    description: Use openspec/specs/documentation-standards.mdc to update whatever documentation is needed according to the changes made
-    content_file: commands/openspec/update-docs.md
-  - name: Create backend standards
-    description: Comprobar si existe el documento openspec/specs/standards/backend.mdc y si no, crearlo con estándares, prácticas recomendadas y convenciones para el desarrollo backend del proyecto
-    content_file: commands/openspec/create-backend-standards.md
-  - name: Analyze and create standards
-    description: Analiza completamente el código base del proyecto y genera un documento estructurado de estándares, convenciones y mejores prácticas basado en el análisis real del código, incluyendo tecnologías, patrones, arquitectura, UI/UX, testing y flujo de desarrollo
-    content_file: commands/openspec/analyze-and-create-standards.md
-  - name: Complete jira ticket
-    description: Analyze and complete Jira tickets by enhancing user stories with technical details and best practices
+# RovoDev Agent Commands Configuration
+# Complete development automation system with expert subagents
+
+# === MAIN WORKFLOW COMMANDS (Core Development Cycle) ===
+workflow_commands:
+  - name: Initialize Project
+    description: Complete project setup with OpenSpec documentation, code guardian generation, and Jira/Confluence integration. Analyzes existing codebase and creates personalized development environment.
+    content_file: commands/initialize-project.md
+    usage: "rovodev initialize-project --project-name='My Project' --jira-project=PROJ"
+    stage: setup
+    expertise_level: intermediate
+    
+  - name: Plan Ticket
+    description: Intelligent Jira ticket analysis with technical enrichment, implementation planning, effort estimation, and acceptance criteria enhancement. Transforms basic tickets into detailed implementation plans.
+    content_file: commands/plan-ticket.md
+    usage: "rovodev plan-ticket PROJ-123"
+    stage: planning
+    expertise_level: beginner
+    
+  - name: Implement Ticket
+    description: Complete automatic implementation including code generation, comprehensive testing, documentation updates, and quality validation. Follows project-specific patterns and standards.
+    content_file: commands/implement-ticket.md
+    usage: "rovodev implement-ticket PROJ-123"
+    stage: implementation
+    expertise_level: intermediate
+    
+  - name: Commit and PR
+    description: Intelligent commit organization with descriptive messages, comprehensive Pull Request creation with technical context, automatic reviewer assignment, and Jira integration.
+    content_file: commands/commit-and-pr.md
+    usage: "rovodev commit-and-pr PROJ-123"
+    stage: finalization
+    expertise_level: beginner
+
+# === SPECIALIZED COMMANDS (Advanced Operations) ===
+specialized_commands:
+  - name: Generate Code Guardian
+    description: Creates project-specific code guardian by analyzing codebase patterns, extracting quality standards, and generating personalized validation rules. Updates automatically as project evolves.
+    content_file: commands/generate-code-guardian.md
+    usage: "rovodev generate-code-guardian --update"
+    category: quality_assurance
+    expertise_level: advanced
+    
+  - name: Evolve Project
+    description: Applies consolidated best practices and patterns to evolve existing projects. Supports refactoring, dependency updates, and incremental architecture improvements while preserving functionality.
+    content_file: commands/evolve-project.md
+    usage: "rovodev evolve-project --maintain --jira=PROJ-456"
+    category: maintenance
+    expertise_level: intermediate
+    
+  - name: Update Documentation
+    description: Automatically synchronizes project documentation with code changes. Updates OpenSpec standards, API documentation, and technical guides based on implementation changes.
+    content_file: commands/update-docs.md
+    usage: "rovodev update-docs"
+    category: documentation
+    expertise_level: beginner
+
+# === ADVANCED INTEGRATION COMMANDS ===
+advanced_commands:
+  - name: Implement from Jira
+    description: Enterprise-grade implementation directly from Jira tickets applying all expert knowledge. Combines analysis, implementation, testing, and documentation in one comprehensive command.
+    content_file: commands/implement-from-jira.md
+    usage: "rovodev implement-from-jira PROJ-123 --type=backend"
+    category: enterprise_automation
+    expertise_level: expert
+
+# === UTILITY COMMANDS (Supporting Tools) ===
+utility_commands:
+  - name: Complete Jira Ticket
+    description: Legacy command for Jira ticket completion with AI assistance. Enhanced with technical details and best practices application.
     content_file: commands/complete-jira-ticket.md
+    usage: "rovodev complete-jira-ticket PROJ-123"
+    category: legacy_support
+    expertise_level: beginner
+    
   - name: Meta-prompt
-    description: Expert prompt engineering assistant that restructures and optimizes prompts using best practices for clarity, structure, and effectiveness
+    description: Expert prompt engineering assistant for restructuring and optimizing prompts using best practices for clarity, structure, and effectiveness.
     content_file: commands/meta-prompt.md
+    usage: "rovodev meta-prompt 'optimize this prompt'"
+    category: prompt_engineering
+    expertise_level: advanced
+
+# === SUBAGENTS CONFIGURATION ===
+subagents:
+  - name: Architecture Expert
+    description: Specialized consultant for architectural decisions, design patterns, and technology stack recommendations based on project analysis and requirements.
+    content_file: subagents/architecture-expert.md
+    domain: architecture_design
+    consultation_points: [initialize, plan, implement]
+    
+  - name: Code Guardian
+    description: Project-specific quality guardian that enforces coding standards, validates implementations, and ensures pattern compliance. Generated dynamically per project.
+    content_file: subagents/code-guardian.md
+    domain: quality_assurance
+    consultation_points: [implement, validate]
+    generated: true
+    
+  - name: DevOps Automation
+    description: Expert in CI/CD pipeline configuration, deployment strategies, containerization, and infrastructure automation.
+    content_file: subagents/devops-automation.md
+    domain: devops_infrastructure
+    consultation_points: [initialize, implement, deploy]
+    
+  - name: Testing Expert
+    description: Specialist in testing strategies, automatic test generation, coverage optimization, and quality metrics validation.
+    content_file: subagents/testing-expert.md
+    domain: testing_quality
+    consultation_points: [plan, implement]
+    
+  - name: Performance Expert
+    description: Expert in performance analysis, optimization strategies, bottleneck detection, and monitoring setup for optimal application performance.
+    content_file: subagents/performance-expert.md
+    domain: performance_optimization
+    consultation_points: [plan, implement, monitor]
+    
+  - name: Security Expert
+    description: Security specialist for vulnerability assessment, threat modeling, compliance validation, and security pattern implementation.
+    content_file: subagents/security-expert.md
+    domain: security_compliance
+    consultation_points: [plan, implement, validate]
+
+# === WORKFLOW CONFIGURATION ===
+workflows:
+  complete_development_cycle:
+    description: "Full development cycle from Jira ticket to production deployment"
+    steps:
+      - initialize-project    # One-time setup
+      - plan-ticket          # Per ticket planning
+      - implement-ticket     # Implementation with all validations
+      - commit-and-pr       # Professional finalization
+    estimated_time: "2-3 hours for standard features"
+    quality_gates: ["testing", "security", "performance", "documentation"]
+    
+  quick_implementation:
+    description: "Rapid implementation for simple changes"
+    steps:
+      - plan-ticket
+      - implement-ticket
+      - commit-and-pr
+    estimated_time: "30-60 minutes"
+    
+  project_setup:
+    description: "Initial project configuration and documentation setup"
+    steps:
+      - initialize-project
+      - generate-code-guardian
+    estimated_time: "10-15 minutes"
+
+# === QUALITY GATES CONFIGURATION ===
+quality_standards:
+  test_coverage:
+    minimum: 85
+    target: 95
+    enforcement: automatic
+    
+  security_scan:
+    vulnerability_tolerance: none_critical
+    compliance_standards: [OWASP, GDPR]
+    enforcement: blocking
+    
+  performance_benchmarks:
+    response_time_p95: "< 200ms"
+    startup_time: "< 30s"
+    memory_usage: "project_specific"
+    
+  code_quality:
+    complexity_threshold: 10
+    duplication_tolerance: 5
+    documentation_coverage: 90
+
+# === INTEGRATION SETTINGS ===
+integrations:
+  jira:
+    automatic_updates: true
+    status_transitions: true
+    comment_updates: true
+    
+  confluence:
+    documentation_sync: true
+    automatic_page_creation: true
+    
+  git:
+    automatic_branching: true
+    conventional_commits: true
+    pr_templates: true
+
+# === SYSTEM METADATA ===
+system:
+  version: "1.0.0"
+  last_updated: "2024-12-19"
+  total_commands: 8
+  total_subagents: 6
+  supported_languages: [python, javascript, typescript, java, go]
+  supported_frameworks: [fastapi, react, angular, django, spring, nestjs]
+  supported_platforms: [docker, kubernetes, aws, azure, gcp]

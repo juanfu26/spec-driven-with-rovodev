@@ -27,6 +27,6 @@ alwaysApply: true
 
 For detailed standards and guidelines specific to different areas of the project, refer to:
 
+- [Documentation Standards](./documentation.mdc) - Technical documentation structure, formatting, and maintenance guidelines, including AI standards like this document
 - [Backend Standards](./backend.mdc) - API development, database patterns, testing, security and backend best practices
 - [Frontend Standards](./frontend.mdc) - React components, UI/UX guidelines, and frontend architecture
-- [Documentation Standards](./documentation.mdc) - Technical documentation structure, formatting, and maintenance guidelines, including AI standards like this document
