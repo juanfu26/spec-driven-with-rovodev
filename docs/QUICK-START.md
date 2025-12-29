@@ -1,6 +1,10 @@
 # ⚡ Quick Start Guide - RovoDev
 
+> Nota: Este documento se ubica en `docs/` y enlaza a otros recursos internos. Actualizado tras reorganización.
+
 ## 🎯 **Desde 0 a Productivo en 15 Minutos**
+
+Esta guía incorpora el resumen de setup inicial (antes en SETUP-COMPLETE.md) para que tengas todo en un solo lugar.
 
 ### **Paso 1: Inicializar (2 minutos)**
 ```bash

@@ -2,6 +2,26 @@
 
 ## 🎯 Resumen del Workflow
 
+### Flujo operativo recomendado
+1. Draft de spec (wiki): `rovodev openspec-draft JIRA "slug"` → crea spec mínima en `/workspace/wiki/openspec/changes`
+
+Nota: Si tus flujos requieren Playwright, arranca un servidor externo `@playwright/mcp` y configura tu cliente MCP para consumirlo. Esta imagen no incluye Playwright para reducir tamaño.
+2. Validación (humana): `rovodev openspec-validate ...` → status: validated
+3. Implementación y PR:
+   - Desarrollo por dominio (p. ej. `rovodev develop-backend JIRA`)
+   - Commits organizados: `rovodev commit JIRA` o `rovodev commit-and-pr JIRA`
+   - Solo PR: `rovodev generate-pr JIRA` → `/workspace/code/openspec/changes/pr-[JIRA].md`
+4. Finalizar tras merge: `rovodev openspec-finalize ...` → status: finalized y PRs en `links.related_prs`
+
+### Estructura actual de trabajo (referencia)
+```
+/workspace
+  /code        # repo de código (bind mount)
+  /wiki        # repo de wiki (bind mount o ./wiki)
+  /.rovodev    # volumen privado (config RovoDev)
+  (cwd: /workspace)
+```
+
 Esta guía describe el uso completo del agente RovoDev desde la inicialización hasta la implementación automatizada de tickets de Jira.
 
 ## 📋 Setup Inicial (Una sola vez)
@@ -11,7 +31,11 @@ Esta guía describe el uso completo del agente RovoDev desde la inicialización 
 # Desde el directorio de tu repositorio
 ./run-rovodev.sh
 ```
-**Resultado**: Contenedor Docker levantado con tu repositorio en `/workspace` y conexión a Jira/Confluence configurada.
+**Resultado**: Contenedor Docker levantado con tu repositorio en `/workspace/code` y funcionalidades opcionales habilitadas por variables de entorno en fichero .env
+* Conexión a Jira/Confluence configurada.
+* Credenciales GIT configuradas
+* MCPs configurados
+* 
 
 ### **Paso 2: Configurar Proyecto para RovoDev**
 ```bash

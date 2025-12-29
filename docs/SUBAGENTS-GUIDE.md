@@ -1,8 +1,15 @@
 # 🤖 Guía Completa de Subagentes RovoDev
 
+> Nota: Este documento se ubica en `docs/` y enlaza a otros recursos internos. Actualizado tras reorganización.
+
 ## 🎯 Filosofía de Subagentes
 
 Los subagentes de RovoDev actúan como **consultores expertos especializados** que otros comandos consultan para tomar decisiones inteligentes. Cada subagente tiene un dominio específico de expertise y proporciona recomendaciones basadas en análisis profundo.
+
+### Cómo saber si debe ser un subagente
+* Si no tiene identidad clara, no merece ser subagente
+* Si puedes describir la skill con una frase tipo “Eres un experto en X y solo haces Y” → es un buen subagente
+* Rovo Dev no lo permite crear skills personalizadas aunque dispone de las suyas propias integradas. Si en otros entornos se considera una skill, puedes crear perfectamente un subagente con esa skill y va a hacer exactamente lo mismo.
 
 ## 🧠 Subagentes Disponibles
 
