@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  rovodev-projectA:
+    image: juanfu26/spec-driven-with-rovodev:latest
+    container_name: rovodev-projectA
+    command: ["sleep", "infinity"]
+    environment:
+      - WIKI_ROOT=/wiki
+    volumes:
+      - /abs/path/projectA:/workspace
+      - /abs/path/projectA-wiki:/wiki
+      - ~/.ssh:/home/rovodev/.ssh:ro
+      - ~/.config/acli:/home/rovodev/.config/acli
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  rovodev-projectB:
+    image: juanfu26/spec-driven-with-rovodev:latest
+    container_name: rovodev-projectB
+    command: ["sleep", "infinity"]
+    environment:
+      - WIKI_ROOT=/wiki
+    volumes:
+      - /abs/path/projectB:/workspace
+      - /abs/path/projectB-wiki:/wiki
+      - ~/.ssh:/home/rovodev/.ssh:ro
+      - ~/.config/acli:/home/rovodev/.config/acli
+      - /var/run/docker.sock:/var/run/docker.sock
