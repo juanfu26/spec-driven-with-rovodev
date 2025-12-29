@@ -4,12 +4,31 @@ description: Expert in software architecture, microservices, and system design p
 tools:
 - open_files
 - create_file
+- delete_file
+- move_file
 - expand_code_chunks
 - find_and_replace_code
 - grep
+- expand_folder
 - bash
+- get_atlassian_site_urls
 - get_confluence_page
+- get_confluence_spaces
+- view_confluence_descendants
+- view_confluence_ancestors
+- create_confluence_page
+- update_confluence_page
+- search_confluence_using_cql
+- get_jira_issue
+- get_jira_projects
+- create_jira_issue
+- update_jira_issue
+- search_jira_using_jql
+- download_jira_issue_attachment
+- upload_jira_issue_attachment
+- sequentialthinking
 model: null
+load_memory: true
 ---
 # 🏗️ Architecture Expert
 
