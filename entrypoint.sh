@@ -14,6 +14,32 @@ set -e  # Exit on any error
 # UTILITY FUNCTIONS
 # =============================================================================
 
+adjust_user_ids() {
+  # Align container user/group IDs with host-provided ones to avoid file permission issues on bind mounts
+  if [[ -n "${HOST_UID:-}" && -n "${HOST_GID:-}" ]] && [[ "$HOST_UID" =~ ^[0-9]+$ ]] && [[ "$HOST_GID" =~ ^[0-9]+$ ]]; then
+    log_section "Adjusting container user/group IDs"
+    local cur_uid cur_gid
+    cur_uid=$(id -u rovodev 2>/dev/null || echo 0)
+    cur_gid=$(id -g rovodev 2>/dev/null || echo 0)
+
+    if [[ "$cur_gid" != "$HOST_GID" ]]; then
+      log_info "Updating group ID: rovodev gid $cur_gid -> $HOST_GID"
+      sudo groupmod -g "$HOST_GID" rovodev 2>/dev/null || true
+    fi
+
+    if [[ "$cur_uid" != "$HOST_UID" ]]; then
+      log_info "Updating user ID: rovodev uid $cur_uid -> $HOST_UID"
+      sudo usermod -u "$HOST_UID" -g "$HOST_GID" rovodev 2>/dev/null || true
+    fi
+
+    # Fix ownership of home and private volume (bind mounts won't be chowned)
+    sudo chown -R rovodev:rovodev /home/rovodev 2>/dev/null || true
+
+    umask 0002
+    log_success "User/group IDs aligned (uid=$(id -u), gid=$(id -g))"
+  fi
+}
+
 log_info() {
     echo "ℹ️  $1"
 }
@@ -37,47 +63,27 @@ log_section() {
 }
 
 # =============================================================================
-# WORKSPACE TEMPLATE SETUP
+# BASE CONFIGURATION SETUP (RovoDev)
+# - Resolve CODE_ROOT (code vs workspace)
+# - Ensure base config exists in /home/rovodev/.rovodev
+# - Provide helpers for later normalization/bootstrapping
 # =============================================================================
 
 setup_workspace_templates() {
-    log_section "Setting up Workspace Templates"
-    
-    # Copy .rovodev if it doesn't exist
-    if [ ! -d "/workspace/.rovodev" ]; then
-        log_info "Creating .rovodev directory with default configuration..."
-        if [ -d "/opt/rovodev-template/.rovodev" ]; then
-            cp -r /opt/rovodev-template/.rovodev /workspace/
-            # Fix ownership to match workspace
-            if [ -w "/workspace" ]; then
-                chown -R $(stat -c '%u:%g' /workspace 2>/dev/null || echo "rovodev:rovodev") /workspace/.rovodev 2>/dev/null || true
-            fi
-            log_success ".rovodev directory created with templates!"
-        else
-            log_warning ".rovodev template not found in image, creating basic structure..."
-            mkdir -p /workspace/.rovodev
-        fi
-    else
-        log_info ".rovodev directory already exists, skipping template copy..."
+
+    # Determine code root (/workspace/code if present, else /workspace)
+    local CODE_ROOT="/workspace"
+    if [ -d "/workspace/code" ]; then
+        CODE_ROOT="/workspace/code"
     fi
-    
-    # Copy openspec if it doesn't exist  
-    if [ ! -d "/workspace/openspec" ]; then
-        log_info "Creating openspec directory with default standards..."
-        if [ -d "/opt/rovodev-template/openspec" ]; then
-            cp -r /opt/rovodev-template/openspec /workspace/
-            # Fix ownership to match workspace
-            if [ -w "/workspace" ]; then
-                chown -R $(stat -c '%u:%g' /workspace 2>/dev/null || echo "rovodev:rovodev") /workspace/openspec 2>/dev/null || true
-            fi
-            log_success "openspec directory created with default standards!"
-        else
-            log_warning "openspec template not found in image, creating basic structure..."
-            mkdir -p /workspace/openspec/specs/standards
-        fi
-    else
-        log_info "openspec directory already exists, skipping template copy..."
+
+    # Ensure base config exists (populated at build time)
+    if [ ! -d "/home/rovodev/.rovodev" ]; then
+        mkdir -p /home/rovodev/.rovodev
+        chown -R rovodev:rovodev /home/rovodev/.rovodev 2>/dev/null || true
+        log_warning "/home/rovodev/.rovodev did not exist; created empty directory"
     fi
+
 }
 
 # =============================================================================
@@ -221,99 +227,6 @@ show_docker_troubleshooting_tips() {
     echo "  Container Runtime: $([ -f /.dockerenv ] && echo 'Docker' || echo 'Unknown')"
 }
 
-# =============================================================================
-# PERSISTENCE SETUP
-# =============================================================================
-
-setup_persistence() {
-    log_section "Setting up Persistence"
-    
-    setup_mounted_persistence
-    setup_workspace_persistence
-}
-
-setup_mounted_persistence() {
-    if [ ! -d "/persistence" ]; then
-        log_info "No persistence directory mounted. Starting with fresh state."
-        return 0
-    fi
-    
-    log_info "Persistence directory detected."
-    
-    if [ -z "$PERSISTENCE_MODE" ]; then
-        log_warning "Persistence directory exists but no mode specified."
-        log_info "Available persistence modes: shared, instance"
-        log_info "Set PERSISTENCE_MODE environment variable to enable persistence."
-        return 0
-    fi
-    
-    log_info "Persistence mode: $PERSISTENCE_MODE"
-    
-    case "$PERSISTENCE_MODE" in
-        "shared")
-            setup_shared_persistence
-            ;;
-        "instance")
-            setup_instance_persistence
-            ;;
-        *)
-            log_error "Unknown persistence mode: $PERSISTENCE_MODE"
-            log_info "Available modes: shared, instance"
-            ;;
-    esac
-}
-
-setup_shared_persistence() {
-    local shared_dir="/persistence/shared"
-    mkdir -p "$shared_dir"
-    log_info "Using shared persistence storage"
-    
-    if [ ! -f "$shared_dir/initialized" ]; then
-        log_info "Initializing shared persistence storage"
-        echo "$(date)" > "$shared_dir/initialized"
-        echo "creator: RovoDev Container" >> "$shared_dir/initialized"
-    fi
-    
-    if [ -d "$shared_dir" ] && [ "$(ls -A $shared_dir)" ]; then
-        log_info "Loading shared persistence data..."
-        # Add specific loading logic here if needed
-    fi
-}
-
-setup_instance_persistence() {
-    local instance_id=${INSTANCE_ID:-$(date +%s)}
-    local instance_dir="/persistence/instance-${instance_id}"
-    
-    mkdir -p "$instance_dir"
-    log_info "Using instance-specific persistence storage (ID: ${instance_id})"
-    
-    if [ ! -f "$instance_dir/initialized" ]; then
-        log_info "Initializing instance persistence storage"
-        echo "$(date)" > "$instance_dir/initialized"
-        echo "instance_id: ${instance_id}" >> "$instance_dir/initialized"
-        echo "creator: RovoDev Container" >> "$instance_dir/initialized"
-    fi
-    
-    if [ -d "$instance_dir" ] && [ "$(ls -A $instance_dir)" ]; then
-        log_info "Loading instance persistence data..."
-        # Add specific loading logic here if needed
-    fi
-}
-
-setup_workspace_persistence() {
-    if [ ! -d "/workspace/persistence" ]; then
-        return 0
-    fi
-    
-    log_info "Found workspace persistence directory"
-    
-    if [ -f "/workspace/persistence/README.md" ]; then
-        log_info "Reading workspace persistence README.md"
-        echo "----------------------------------------"
-        cat "/workspace/persistence/README.md"
-        echo "----------------------------------------"
-    fi
-}
 
 # =============================================================================
 # GIT CONFIGURATION SETUP
@@ -387,6 +300,55 @@ start_rovodev() {
 }
 
 # =============================================================================
+# Utility: prepare wiki directories if mounted
+# =============================================================================
+prepare_wiki() {
+  if [[ -n "$WIKI_ROOT" && -d "$WIKI_ROOT" ]]; then
+    # If wiki seems empty (no files), bootstrap minimal OpenSpec structure
+    if [ -z "$(ls -A "$WIKI_ROOT" 2>/dev/null)" ]; then
+      log_info "Wiki root detected and empty. Bootstrapping minimal OpenSpec structure..."
+      if [ -d "/opt/templates/openspec" ]; then
+        mkdir -p "$WIKI_ROOT/openspec" && cp -r /opt/templates/openspec/* "$WIKI_ROOT/openspec/" 2>/dev/null || true
+        chown -R rovodev:rovodev "$WIKI_ROOT/openspec" 2>/dev/null || true
+        # Create changes directory and keep file
+        mkdir -p "$WIKI_ROOT/openspec/changes" && touch "$WIKI_ROOT/openspec/changes/.keep" 2>/dev/null || true
+        # Create simple index if not present
+        if [[ ! -f "$WIKI_ROOT/openspec/index.md" ]]; then
+          cat > "$WIKI_ROOT/openspec/index.md" << 'EOF'
+# OpenSpec Index
+
+- standards/: templates and standards
+- changes/: specs per ticket (draft → validated → finalized)
+EOF
+        fi
+        log_success "Wiki OpenSpec bootstrap completed"
+      else
+        log_warning "OpenSpec templates not found in image; created empty structure"
+        mkdir -p "$WIKI_ROOT/openspec/changes" || true
+      fi
+    else
+      # Wiki has content; just ensure changes directory exists and do nothing else
+      mkdir -p "$WIKI_ROOT/openspec/changes" || true
+      log_info "Wiki root detected with content. No bootstrap changes applied."
+    fi
+  fi
+}
+
+# =============================================================================
+# MOUNTS/ENV SUMMARY (for quick debugging)
+# =============================================================================
+print_mounts_status() {
+  echo ""
+  echo "[mounts] Workspace layout"
+  printf "  • /workspace exists: %s\n" "$( [ -d /workspace ] && echo yes || echo no )"
+  printf "  • /workspace/code mounted: %s\n" "$( [ -d /workspace/code ] && echo yes || echo no )"
+  printf "  • /workspace/wiki mounted: %s\n" "$( [ -d /workspace/wiki ] && echo yes || echo no )"
+  printf "  • Project .rovodev present: %s\n" "$( [ -d /workspace/code/.rovodev ] && echo yes || echo no )"
+  echo "[env] Key variables"
+  printf "  • WIKI_ROOT=%s\n" "${WIKI_ROOT:-<unset>}"
+}
+
+# =============================================================================
 # MAIN EXECUTION FLOW
 # =============================================================================
 
@@ -398,8 +360,10 @@ main() {
     setup_workspace_templates
     setup_atlassian_auth
     setup_docker_access
-    setup_persistence
+    : # persistence disabled
     setup_git_config
+    prepare_wiki
+    print_mounts_status
     
     echo ""
     log_success "Container initialization complete!"
