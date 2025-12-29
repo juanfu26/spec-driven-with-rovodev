@@ -1,86 +1,99 @@
 # RovoDev Agent Commands Configuration
 # Complete development automation system with expert subagents
 
-# === MAIN WORKFLOW COMMANDS (Core Development Cycle) ===
-workflow_commands:
-  - name: Initialize Project
-    description: Complete project setup with OpenSpec documentation, code guardian generation, and Jira/Confluence integration. Analyzes existing codebase and creates personalized development environment.
-    content_file: commands/initialize-project.md
-    usage: "rovodev initialize-project --project-name='My Project' --jira-project=PROJ"
-    stage: setup
-    expertise_level: intermediate
-    
-  - name: Plan Ticket
-    description: Intelligent Jira ticket analysis with technical enrichment, implementation planning, effort estimation, and acceptance criteria enhancement. Transforms basic tickets into detailed implementation plans.
-    content_file: commands/plan-ticket.md
-    usage: "rovodev plan-ticket PROJ-123"
-    stage: planning
-    expertise_level: beginner
-    
-  - name: Implement Ticket
-    description: Complete automatic implementation including code generation, comprehensive testing, documentation updates, and quality validation. Follows project-specific patterns and standards.
-    content_file: commands/implement-ticket.md
-    usage: "rovodev implement-ticket PROJ-123"
-    stage: implementation
-    expertise_level: intermediate
-    
-  - name: Commit and PR
-    description: Intelligent commit organization with descriptive messages, comprehensive Pull Request creation with technical context, automatic reviewer assignment, and Jira integration.
-    content_file: commands/commit-and-pr.md
-    usage: "rovodev commit-and-pr PROJ-123"
-    stage: finalization
-    expertise_level: beginner
+# === COMMANDS (Unified list for compatibility) ===
+prompts:
 
-# === SPECIALIZED COMMANDS (Advanced Operations) ===
-specialized_commands:
-  - name: Generate Code Guardian
-    description: Creates project-specific code guardian by analyzing codebase patterns, extracting quality standards, and generating personalized validation rules. Updates automatically as project evolves.
-    content_file: commands/generate-code-guardian.md
-    usage: "rovodev generate-code-guardian --update"
-    category: quality_assurance
-    expertise_level: advanced
-    
-  - name: Evolve Project
-    description: Applies consolidated best practices and patterns to evolve existing projects. Supports refactoring, dependency updates, and incremental architecture improvements while preserving functionality.
-    content_file: commands/evolve-project.md
-    usage: "rovodev evolve-project --maintain --jira=PROJ-456"
-    category: maintenance
-    expertise_level: intermediate
-    
-  - name: Update Documentation
-    description: Automatically synchronizes project documentation with code changes. Updates OpenSpec standards, API documentation, and technical guides based on implementation changes.
-    content_file: commands/update-docs.md
-    usage: "rovodev update-docs"
-    category: documentation
-    expertise_level: beginner
+  - name: Prompt Template (Example)
+    description: "[P1] Plantilla base para crear nuevos prompts con objetivo, instrucciones y salida."
+    content_file: commands/prompt_template.md
 
-# === ADVANCED INTEGRATION COMMANDS ===
-advanced_commands:
-  - name: Implement from Jira
-    description: Enterprise-grade implementation directly from Jira tickets applying all expert knowledge. Combines analysis, implementation, testing, and documentation in one comprehensive command.
-    content_file: commands/implement-from-jira.md
-    usage: "rovodev implement-from-jira PROJ-123 --type=backend"
-    category: enterprise_automation
-    expertise_level: expert
+  # P1 - Exploration & Analysis
+  - name: Analyze Improvement
+    description: "[P1] Exploración y viabilidad de una mejora con sequential-thinking, revisión de wiki/ y consulta selectiva de subagentes."
+    content_file: commands/p1_exploration/p1_analyze_improvement.md
+  - name: Requirements Collection
+    description: "[P1] Recopilar requisitos multidisciplinar para producir un SRS con objetivos, estimaciones y planificación de alto nivel."
+    content_file: commands/p1_exploration/p1_requirements_collection.md
+ 
+  - name: Meta prompt
+    description: "[P1] Mejorar un prompt."
+    content_file: commands/p1_exploration/p1_prepare_meta_prompt.md
 
-# === UTILITY COMMANDS (Supporting Tools) ===
-utility_commands:
+  # P2 – Requirement Definition (BDD)
   - name: Complete Jira Ticket
-    description: Legacy command for Jira ticket completion with AI assistance. Enhanced with technical details and best practices application.
-    content_file: commands/complete-jira-ticket.md
-    usage: "rovodev complete-jira-ticket PROJ-123"
-    category: legacy_support
-    expertise_level: beginner
-    
-  - name: Meta-prompt
-    description: Expert prompt engineering assistant for restructuring and optimizing prompts using best practices for clarity, structure, and effectiveness.
-    content_file: commands/meta-prompt.md
-    usage: "rovodev meta-prompt 'optimize this prompt'"
-    category: prompt_engineering
-    expertise_level: advanced
+    description: "[P2] Mejorar y completar un ticket de Jira."
+    content_file: commands/p2_requirements_bdd/p2_complete_jira_ticket.md
+
+  # P3 – Technical Design & Task Refinement
+  - name: Plan Ticket
+    description: "[P3] Intelligent Jira ticket analysis and planning."
+    content_file: commands/p3_technical_design/p3_plan_ticket_on_wiki.md
+
+  # P4 – Implementation Planning (OpenSpec)
+  - name: Initialize Project
+    description: "[P4] Complete project setup with OpenSpec documentation, code guardian generation, and Jira/Confluence integration."
+    content_file: commands/p4_implementation_planning/p4_initialize_project.md
+  - name: OpenSpec Draft
+    description: "[P4] Crear spec mínima en la wiki."
+    content_file: commands/p4_implementation_planning/p4_openspec_draft.md
+
+  # P5 – Documentation Engineering (OpenSpec)
+  - name: OpenSpec Validate
+    description: "[P5] Marcar spec como validada."
+    content_file: commands/p5_documentation/p5_openspec_validate.md
+  - name: OpenSpec Finalize
+    description: "[P5] Finalizar spec tras merge."
+    content_file: commands/p5_documentation/p5_openspec_finalize.md
+  - name: OpenSpec Bootstrap Wiki
+    description: "[P5] Preparar wiki para OpenSpec."
+    content_file: commands/p5_documentation/p5_openspec_bootstrap_wiki.md
+  - name: Update Documentation
+    description: "[P5] Synchronizes project documentation with code changes."
+    content_file: commands/p5_documentation/p5_update_documentation.md
+
+  # P6 – Execution & Delivery
+  - name: Implement from Jira
+    description: "[P6] Implementación desde tickets de Jira."
+    content_file: commands/p6_execution/p6_implement_from_jira.md
+  - name: Implement Ticket
+    description: "[P6] Automatic implementation including code, tests, and docs."
+    content_file: commands/p6_execution/p6_implement_ticket.md
+  - name: Develop Backend
+    description: "[P6] Flujo end-to-end para tickets backend."
+    content_file: commands/p6_execution/p6_develop_backend.md
+  - name: Develop Trying
+    description: "[P6] Herramientas experimentales de desarrollo."
+    content_file: commands/p6_execution/p6_develop_trying.md
+  - name: Evolve Project
+    description: "[P6] Applies best practices and patterns to evolve projects."
+    content_file: commands/p6_execution/p6_evolve_project.md
+  - name: Commit
+    description: "[P6] Commits organizados (sin PR)."
+    content_file: commands/p6_execution/p6_commit.md
+  - name: Generate PR
+    description: "[P6] Generar solo contenido de PR (git diff base)."
+    content_file: commands/p6_execution/p6_generate_pr.md
+  - name: Commit and PR
+    description: "[P6] Commits organizados y generar PR (archivo)."
+    content_file: commands/p6_execution/p6_commit_and_pr.md
+
+  # P7 – Review, Optimization & Hardening
+  - name: OpenSpec Audit Wiki
+    description: "[P7] Auditar wiki OpenSpec."
+    content_file: commands/p7_review_optimization/p7_openspec_audit_wiki.md
+  - name: Generate Code Guardian
+    description: "[P7] Creates project-specific code guardian rules."
+    content_file: commands/p7_review_optimization/p7_generate_code_guardian.md
 
 # === SUBAGENTS CONFIGURATION ===
 subagents:
+
+  - name: Subagent Template (Example)
+    description: Plantilla para definir subagentes con herramientas y proceso.
+    content_file: subagents/subagent_template.md
+    consultation_points: [initialize]
+
   - name: Architecture Expert
     description: Specialized consultant for architectural decisions, design patterns, and technology stack recommendations based on project analysis and requirements.
     content_file: subagents/architecture-expert.md
@@ -113,10 +126,35 @@ subagents:
     consultation_points: [plan, implement, monitor]
     
   - name: Security Expert
-    description: Security specialist for vulnerability assessment, threat modeling, compliance validation, and security pattern implementation.
+    description: Experto en seguridad y cumplimiento.
     content_file: subagents/security-expert.md
     domain: security_compliance
     consultation_points: [plan, implement, validate]
+    
+  - name: Commit Expert
+    description: Organiza commits (conventional commits).
+    content_file: subagents/commit-expert.md
+    domain: version_control
+    consultation_points: [finalization]
+    
+  - name: Pull Request Expert
+    description: Redacta PRs completas y legibles.
+    content_file: subagents/pullrequest-expert.md
+    domain: code_review
+    consultation_points: [finalization]
+    
+  - name: Openspec Expert
+    description: Estructura y reglas de OpenSpec.
+    content_file: subagents/openspec-expert.md
+    domain: documentation
+    consultation_points: [plan, implement]
+    
+  - name: Portainer Expert
+    description: Operaciones y automatización en Portainer.
+    content_file: subagents/portainer-expert.md
+    domain: devops
+    consultation_points: [implement, validate]
+
 
 # === WORKFLOW CONFIGURATION ===
 workflows:
@@ -186,9 +224,68 @@ integrations:
 # === SYSTEM METADATA ===
 system:
   version: "1.0.0"
-  last_updated: "2024-12-19"
-  total_commands: 8
-  total_subagents: 6
+  last_updated: "2025-12-22"
+  total_commands: 18
+  total_subagents: 10
   supported_languages: [python, javascript, typescript, java, go]
   supported_frameworks: [fastapi, react, angular, django, spring, nestjs]
   supported_platforms: [docker, kubernetes, aws, azure, gcp]
+
+# === POLICIES & GUARDRAILS (Tool Preference & Security) ===
+policies:
+  tool_usage:
+    must_use_mcp_tools: true
+    preferred_tools:
+      - filesystem
+      - git
+      - memory
+      - docker
+      - portainer
+      - redis
+      - influxdb
+      - postgresql
+      - keycloak
+    forbidden_shell_commands:
+      - "git*"
+    guidance:
+      - "Usa exclusivamente las tools MCP para acceder a archivos, Git y servicios externos."
+      - "Evita ejecutar comandos git en shell; utiliza el MCP Git (status, show, log, blame, ls-files, branch)."
+      - "No invoques servicios externos por shell (curl/wget) a menos que exista un MCP habilitado explícitamente."
+
+  git_policy:
+    prefer_mcp_git: true
+    forbidden_shell_git: true
+    allowed_mcp_git_commands: [status, show, log, blame, ls-files, branch]
+    denied_operations: [push, fetch, pull, clone, checkout, reset, rebase, merge, commit]
+    rationale: "Minimizar riesgo de mutaciones y exfiltración; centralizar auditoría vía MCP."
+
+  filesystem_policy:
+    scope_roots: ["/workspace/code", "/workspace/wiki"]
+    readonly: true
+    max_file_size_bytes: 1048576
+    rationale: "Principio de mínimo privilegio y límites de datos."
+
+  external_services_policy:
+    activation: "disabled_by_default"
+    readonly_default: true
+    credential_injection: "env_only_no_repo"
+    require_scoping: true
+    examples:
+      docker:
+        allowed_images_env: MCP_DOCKER_ALLOWED_IMAGES
+      portainer:
+        endpoints_env: MCP_PORTAINER_ALLOWED_ENDPOINTS
+      postgresql:
+        allowed_schemas_env: MCP_POSTGRES_ALLOWED_SCHEMAS
+      influxdb:
+        bucket_org_scoped: true
+      keycloak:
+        client_scope_minimized: true
+    rationale: "Evitar fugas de datos y limitar superficies de ataque."
+
+  compliance:
+    jira_modifications_require_consent: true
+    confluence_publication_requires_confirmation: true
+    notes:
+      - "Nunca crear/editar/transicionar/comentar en Jira sin permiso explícito."
+      - "Documentar análisis significativos en Confluence opcionalmente, previo consentimiento."

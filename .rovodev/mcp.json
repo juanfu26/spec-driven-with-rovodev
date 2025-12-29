@@ -1,10 +1,39 @@
 {
   "mcpServers": {
-    "playwright": {
+    "filesystem": {
       "command": "npx",
-      "args": ["@playwright/mcp"],
+      "args": ["@modelcontextprotocol/server-filesystem"],
+      "env": {
+        "MCP_FS_ROOTS": "/workspace/code:/workspace/wiki",
+        "MCP_FS_READONLY": "true",
+        "MCP_FS_MAX_FILE_SIZE": "1048576"
+      },
+      "disabled": false
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-memory"],
+      "env": {
+        "MCP_MEMORY_STORE_PATH": "/home/rovodev/.rovodev/memory.sqlite",
+        "MCP_MEMORY_MAX_ITEMS": "5000"
+      },
+      "disabled": false
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-sequential-thinking"],
       "env": {},
       "disabled": false
+    },
+    "playwright": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "mcp/playwright"
+      ],
+      "disabled": true
     }
   }
 }
