@@ -1,6 +1,6 @@
 # 📋 Plan Ticket
 
-Comando que analiza un ticket de Jira y genera un plan detallado de implementación, mejorando el contenido del ticket con análisis técnico, estimaciones y especificaciones de implementación.
+Comando que analiza un ticket de Jira y genera un plan detallado de implementación, mejorando el contenido del ticket con análisis técnico y especificaciones de implementación.
 
 ## 🎯 Objetivo
 
@@ -326,3 +326,48 @@ Ticket de Jira transformado de descripción básica a plan de implementación en
 - ✅ **Criterios de aceptación** mejorados y técnicos
 
 El ticket está listo para implementación eficiente y sin sorpresas.
+
+## Materialización en OpenSpec (wiki) y ciclo de validación
+
+1) Genera un documento OpenSpec en estado "draft" con la planificación técnica:
+   - Ruta sugerida: `$WIKI_ROOT/openspec/changes/[YYYY-MM-DD]_[JIRA]_[slug].md`
+   - Frontmatter mínimo:
+     ```yaml
+     ---
+     id: [JIRA-ID]
+     title: [Breve título de la spec]
+     status: draft
+     created_at: [YYYY-MM-DD]
+     authors: [tu-usuario]
+     domains: [backend, frontend, infra]
+     links:
+       jira: https://jira.tu-org/browse/[JIRA-ID]
+       confluence: [opcional_url]
+       related_prs: []
+     validation:
+       reviewers: [backend_ref, frontend_ref, infra_ref, negocio_ref]
+       checkpoints: [alcance, impactos, riesgo]
+     ---
+     ```
+   - Secciones recomendadas:
+     - Objetivo funcional (1–2 frases)
+     - Cambios esperados (por componentes/capas)
+     - Impacto por capa (Backend/Frontend/Infra)
+     - Riesgos conocidos
+     - Criterios de aceptación (resumen)
+     - Definición de Hecho (DoD)
+     - Estrategia de testing (unit/integration/e2e)
+
+2) Trazabilidad y evidencia
+   - Añade links (jira, related_prs, confluence si aplica)
+   - Referencia estándares: `openspec/standards/documentation.mdc` si existe
+
+3) Estado y validación
+   - Mantener como draft hasta validación del desarrollador
+   - Validación manual usando "OpenSpec Validate" (cambia a `status: validated`)
+   - Finalización post-merge con "OpenSpec Finalize" (cambia a `status: finalized`)
+
+4) Herramientas relacionadas (commands)
+   - OpenSpec Draft: `commands/p4_implementation_planning/p4_openspec_draft.md`
+   - OpenSpec Validate: `commands/p5_documentation/p5_openspec_validate.md`
+   - OpenSpec Finalize: `commands/p5_documentation/p5_openspec_finalize.md`
