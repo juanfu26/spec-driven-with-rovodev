@@ -1,0 +1,7 @@
+# Esteblece el comportamiento predeterminado, en caso de que las personas no tengan configurado core.autocrlf.
+* text=auto
+
+# Makefile text eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+*.bat text eol=crlf
